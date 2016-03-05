@@ -1,0 +1,4 @@
+sprinkler:
+    resource: "@SprinklerBundle/Controller/"
+    type:     annotation
+    prefix:   /
