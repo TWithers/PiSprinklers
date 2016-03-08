@@ -5,5 +5,5 @@ services:
     overcast:
         class: VertigoLabs\Overcast\Overcast
         arguments: ["%forecast_api%"]
-paramters:
+parameters:
     forecast_api: 52a922ed7f8951840188f2b09dd90dd4
