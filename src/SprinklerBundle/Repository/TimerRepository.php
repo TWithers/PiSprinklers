@@ -12,8 +12,8 @@ class TimerRepository extends Repository
     public function addTimerFromForm(TimerForm $form,Zone $zone){
         foreach($form->getDays() as $day){
             $timer = new Timer;
-            $timer->setStart(date("h:i",strtotime($form->getStart())));
-            $timer->setEnd(date("h:i",strtotime($form->getStart())+$form->getDuration()));
+            $timer->setStart(date("H:i",strtotime($form->getStart())));
+            $timer->setEnd(date("H:i",strtotime($form->getStart())+($form->getDuration()*60)));
             $timer->setZone($zone);
             $timer->setDay($day);
             $this->em->persist($timer);
