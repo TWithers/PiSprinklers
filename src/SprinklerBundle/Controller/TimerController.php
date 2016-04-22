@@ -72,7 +72,6 @@ class TimerController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($timerForm);
             $timerRepo->addTimerFromForm($timerForm,$zone);
             return $this->redirectToRoute('timer.index');
         }
