@@ -1,0 +1,72 @@
+{% extends "SprinklerBundle:Default:template.html.twig" %}
+
+{% block masthead %}
+    <div class="row">
+        <div class="col-md-7">
+            <h1>Zone Timers
+            </h1>
+        </div>
+        <div class="col-md-5">
+            <div class="well well-lg">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>Zone timers are the schedule for the different irrigation zones.  You can set up multiple timers for each zone for each day.  You can have it run as short as one minute or as long as you want.  You should only do one zone at a time as multiple zones may cause voltage or water pressure issues.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    {%  for zone in zones %}
+                        <div class="row" style="vertical-align: middle">
+                            <div class="col-md-12 col-xs-6 text-center">
+                                <a class="story-title" href="#">
+                                    {% if zone.image == 1 %}
+                                        <img alt="" src="{{ asset('assets/images/sprinkler-icon-blue.png') }}" width="100" align="left">
+                                    {% else %}
+                                        <img alt="" src="{{ asset('assets/images/drip-icon-blue.png') }}" width="100" align="left">
+                                    {% endif %}
+                                </a>
+                                <h3> {{ zone.name }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% for day in 1..7 %}
+                            <div class="col-md-3 col-sm-4 col-xs-6 text-center">
+                                <div class="well">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <img alt="" src="{{ asset('assets/images/'~days[day].image~'.png') }}" width="32" align="left"/>
+                                            <b>{{ days[day].name }}</b>
+                                        </div>
+                                    </div>
+                                    {% for timer in timers[zone.id][day] %}
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            {{ timer.start | date("g:i") }} - {{ timer.end | date("g:i A")}} <a class="btn btn-danger btn-sm" href="{{ path('timer.delete',{id:timer.id}) }}"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                    {%  endfor %}
+                                </div>
+
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <a href="{{ path('timer.create',{relay:zone.relay}) }}" class="btn btn-primary pull-right"><i class="fa fa-plus-circle"></i> Add Timer for {{ zone.name }}</a>
+                        <br style="clear:both;"/>
+                        <hr>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

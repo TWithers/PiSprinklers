@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>Pi Sprinklers</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        {% block headAssets %}
+        <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/css/font-awesome.min.css') }}" rel="stylesheet">
+        <!--[if lt IE 9]>
+        <script src="{{ asset('assets/js/html5shim.js') }}"></script>
+        <![endif]-->
+        <link href="{{ asset('assets/css/styles.css') }}" rel="stylesheet">
+        {% endblock %}
+    </head>
+    <body>
+        <header class="navbar navbar-bright navbar-fixed-top" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="/" class="navbar-brand">Home</a>
+                </div>
+                <nav class="collapse navbar-collapse" role="navigation">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{{ path('zone.index') }}">Add Zones</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('timer.index') }}">Set Timers</a>
+                        </li>
+                        {#<li>#}
+                            {#<a href="/settings">Settings</a>#}
+                        {#</li>#}
+                    </ul>
+                    <ul class="nav navbar-right navbar-nav">
+                        <li>
+                            <a href="{{ path('forecast.redirect') }}">
+                                <canvas id="weather_icon" width="32" height="32"></canvas> {{ weather.temp }}&deg; <small>({{ weather.city }}, {{ weather.state }})</small>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div id="masthead">
+            <div class="container">
+                {% block masthead %}
+
+                {%  endblock %}
+            </div><!-- /cont -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="top-spacer"> </div>
+                    </div>
+                </div>
+            </div><!-- /cont -->
+        </div>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <hr>
+        <div class="container" id="footer">
+            <div class="row">
+                <div class="col col-sm-12">
+
+                    <h1>Questions/Issues</h1>
+                    <div class="btn-group">
+                        <a class="btn btn-twitter btn-lg" href="http://github.com/TimWithers/PiSprinklers"><i class="fa fa-github fa-lg"></i> Github Project</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <hr>
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="pull-right">Theme by <i class="icon-heart-empty"></i> at <a href="http://www.bootply.com">Bootply</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {% block scripts %}
+        <script src="{{ asset('assets/js/jquery-2.2.3.min.js') }}"></script>
+        <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('assets/js/skycons.js') }}"></script>
+        <script>
+            var skycons = new Skycons({"color": "#ccccdd"});
+            skycons.add("weather_icon", '{{ weather.icon }}');
+            skycons.play();
+        </script>
+        {% endblock %}
+    </body>
+</html>

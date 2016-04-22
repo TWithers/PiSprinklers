@@ -1,0 +1,62 @@
+{% extends "SprinklerBundle:Default:template.html.twig" %}
+
+{% block masthead %}
+    <div class="row">
+        <div class="col-md-7">
+            <h1>Irrigation Zones
+            </h1>
+        </div>
+        <div class="col-md-5">
+            <div class="well well-lg">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>Zones are the individual valves.  Often, one valve is for sprinklers in one area, another for driplines, and another is for backyard irrigation.  Here we can see, edit, and add irrigation zones.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    {%  for zone in zones %}
+                        <div class="row" style="vertical-align: middle">
+                           <div class="col-md-2 col-sm-2 text-center">
+                                <a class="story-title" href="#">
+                                    {% if zone.image == 1 %}
+                                    <img alt="" src="{{ asset('assets/images/sprinkler-icon-blue.png') }}" width="100">
+                                    {% else %}
+                                    <img alt="" src="{{ asset('assets/images/drip-icon-blue.png') }}" width="100">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="col-md-8 col-sm-6 text-center">
+                                <h3> {{ zone.name }}
+                                    <small><span class="label label-info">GPIO Pin {{ zone.relay }}</span></small>
+                                </h3>
+                            </div>
+                            <div class="col-md-2 col-sm-4 text-center">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-6 col-xs-6" style="margin:5px 0;">
+                                        <a href="{{ path("zone.edit",{"relay":zone.relay}) }}" class="btn btn-warning"><i class="fa fa-edit"></i> Edit</a>
+                                    </div>
+                                    <div class="col-md-12 col-sm-6 col-xs-6" style="margin:5px 0;">
+                                        <a href="{{ path("zone.delete",{"relay":zone.relay}) }}" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                    <a href="{{ path("zone.add") }}" class="btn btn-primary pull-right"><i class="fa fa-plus-circle"></i> Add New Zone</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

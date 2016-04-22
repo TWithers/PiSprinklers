@@ -1,0 +1,25 @@
+{% extends "SprinklerBundle:Default:template.html.twig" %}
+
+{% block masthead %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Error!
+                <p class="lead">An error has occurred</p>
+            </h1>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <h1 class="text-danger"><i class="fa fa-exclamation-triangle"></i> {{ error.title }}</h1>
+                    <p>{{ error.message }}</p>
+                    <small><em>Error code: {{ error.code }}</em></small>
+                </div>
+            </div>
+        </div><!--/col-12-->
+    </div>
+{% endblock %}

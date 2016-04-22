@@ -1,5 +1,6 @@
 imports:
     - { resource: config.yml }
+    - { resource: "@SprinklerBundle/Resources/config/parameters_dev.yml" }
 
 framework:
     router:

@@ -1,1 +1,54 @@
-Hello World!
+{% extends "SprinklerBundle:Default:template.html.twig" %}
+
+{% block masthead %}
+    <div class="row">
+        <div class="col-md-7">
+            <h1>Pi Sprinklers
+                <p class="lead">Manage your Rasbperry Pi Sprinklers with ease!</p>
+            </h1>
+        </div>
+        <div class="col-md-5">
+            <div class="well well-lg">
+                <div class="row">
+                    <div class="col-sm-12">
+                        {% if upnext.image == 1 %}
+                            <img src="{{ asset('assets/images/sprinkler-icon-white.png') }}" width="64" align="left" class="header-well-icon"/>
+                        {% elseif upnext.image == 2 %}
+                            <img src="{{ asset('assets/images/drip-icon-white.png') }}" width="64" align="left" class="header-well-icon"/>
+                        {% endif %}
+                        <h4>{{ upnext.name }}</h4>
+                        <p>{{ upnext.start }} - {{ upnext.end }}</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <h3>Your Schedule</h3>
+                    {%  for day in timers %}
+                        <div class="row">
+                            <br>
+                            <div class="col-md-2 col-sm-3 text-center">
+                                <a class="story-title" href="#"><img alt="" src="{{ asset('assets/images/'~day.image~'.png') }}" width="100"></a>
+                            </div>
+                            <div class="col-md-10 col-sm-9">
+                                {% for timer in day.timers %}
+                                    <h3> {{ timer.zone }} <span class="label label-default">{{ timer.start }} - {{ timer.end }}</span></h3>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                    <!--/stories-->
+                </div>
+            </div>
+        </div><!--/col-12-->
+    </div>
+{% endblock %}

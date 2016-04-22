@@ -112,6 +112,7 @@ class appDevDebugProjectContainer extends Container
             'fragment.renderer.hinclude' => 'getFragment_Renderer_HincludeService',
             'fragment.renderer.inline' => 'getFragment_Renderer_InlineService',
             'fragment.renderer.ssi' => 'getFragment_Renderer_SsiService',
+            'geocode' => 'getGeocodeService',
             'http_kernel' => 'getHttpKernelService',
             'kernel' => 'getKernelService',
             'kernel.class_cache.cache_warmer' => 'getKernel_ClassCache_CacheWarmerService',
@@ -133,12 +134,14 @@ class appDevDebugProjectContainer extends Container
             'profiler' => 'getProfilerService',
             'profiler_listener' => 'getProfilerListenerService',
             'property_accessor' => 'getPropertyAccessorService',
+            'repository' => 'getRepositoryService',
             'request_stack' => 'getRequestStackService',
             'response_listener' => 'getResponseListenerService',
             'router' => 'getRouterService',
             'router.request_context' => 'getRouter_RequestContextService',
             'router_listener' => 'getRouterListenerService',
             'routing.loader' => 'getRouting_LoaderService',
+            'schedule.repository' => 'getSchedule_RepositoryService',
             'security.access.decision_manager' => 'getSecurity_Access_DecisionManagerService',
             'security.authentication.guard_handler' => 'getSecurity_Authentication_GuardHandlerService',
             'security.authentication.manager' => 'getSecurity_Authentication_ManagerService',
@@ -192,6 +195,7 @@ class appDevDebugProjectContainer extends Container
             'templating.loader' => 'getTemplating_LoaderService',
             'templating.locator' => 'getTemplating_LocatorService',
             'templating.name_parser' => 'getTemplating_NameParserService',
+            'timer.repository' => 'getTimer_RepositoryService',
             'translation.dumper.csv' => 'getTranslation_Dumper_CsvService',
             'translation.dumper.ini' => 'getTranslation_Dumper_IniService',
             'translation.dumper.json' => 'getTranslation_Dumper_JsonService',
@@ -235,10 +239,13 @@ class appDevDebugProjectContainer extends Container
             'validator.expression' => 'getValidator_ExpressionService',
             'var_dumper.cli_dumper' => 'getVarDumper_CliDumperService',
             'var_dumper.cloner' => 'getVarDumper_ClonerService',
+            'weather.repository' => 'getWeather_RepositoryService',
+            'weather.service' => 'getWeather_ServiceService',
             'web_profiler.controller.exception' => 'getWebProfiler_Controller_ExceptionService',
             'web_profiler.controller.profiler' => 'getWebProfiler_Controller_ProfilerService',
             'web_profiler.controller.router' => 'getWebProfiler_Controller_RouterService',
             'web_profiler.debug_toolbar' => 'getWebProfiler_DebugToolbarService',
+            'zone.repository' => 'getZone_RepositoryService',
         );
         $this->aliases = array(
             'console.command.sensiolabs_security_command_securitycheckercommand' => 'sensio_distribution.security_checker.command',
@@ -670,7 +677,7 @@ class appDevDebugProjectContainer extends Container
     {
         $this->services['doctrine_cache.providers.doctrine.orm.default_metadata_cache'] = $instance = new \Doctrine\Common\Cache\ArrayCache();
 
-        $instance->setNamespace('sf2orm_default_f8e1d122e820a13eeae29bf248831beb672345c6822ab97aca19b9aee554990d');
+        $instance->setNamespace('sf2orm_default_f03149cc58e82372c1fb18549c394aa780aa43b313c5e3dcb1c69af4df241dae');
 
         return $instance;
     }
@@ -687,7 +694,7 @@ class appDevDebugProjectContainer extends Container
     {
         $this->services['doctrine_cache.providers.doctrine.orm.default_query_cache'] = $instance = new \Doctrine\Common\Cache\ArrayCache();
 
-        $instance->setNamespace('sf2orm_default_f8e1d122e820a13eeae29bf248831beb672345c6822ab97aca19b9aee554990d');
+        $instance->setNamespace('sf2orm_default_f03149cc58e82372c1fb18549c394aa780aa43b313c5e3dcb1c69af4df241dae');
 
         return $instance;
     }
@@ -704,7 +711,7 @@ class appDevDebugProjectContainer extends Container
     {
         $this->services['doctrine_cache.providers.doctrine.orm.default_result_cache'] = $instance = new \Doctrine\Common\Cache\ArrayCache();
 
-        $instance->setNamespace('sf2orm_default_f8e1d122e820a13eeae29bf248831beb672345c6822ab97aca19b9aee554990d');
+        $instance->setNamespace('sf2orm_default_f03149cc58e82372c1fb18549c394aa780aa43b313c5e3dcb1c69af4df241dae');
 
         return $instance;
     }
@@ -1397,6 +1404,19 @@ class appDevDebugProjectContainer extends Container
     }
 
     /**
+     * Gets the 'geocode' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \KamranAhmed\Geocode\Geocode A KamranAhmed\Geocode\Geocode instance.
+     */
+    protected function getGeocodeService()
+    {
+        return $this->services['geocode'] = new \KamranAhmed\Geocode\Geocode();
+    }
+
+    /**
      * Gets the 'http_kernel' service.
      *
      * This service is shared.
@@ -1460,6 +1480,7 @@ class appDevDebugProjectContainer extends Container
     {
         $this->services['logger'] = $instance = new \Symfony\Bridge\Monolog\Logger('app');
 
+        $instance->useMicrosecondTimestamps(true);
         $instance->pushHandler($this->get('monolog.handler.console'));
         $instance->pushHandler($this->get('monolog.handler.main'));
         $instance->pushHandler($this->get('monolog.handler.debug'));
@@ -1756,6 +1777,19 @@ class appDevDebugProjectContainer extends Container
     }
 
     /**
+     * Gets the 'repository' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \Sprinklerbundle\Repository\Repository A Sprinklerbundle\Repository\Repository instance.
+     */
+    protected function getRepositoryService()
+    {
+        return $this->services['repository'] = new \Sprinklerbundle\Repository\Repository($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
      * Gets the 'request_stack' service.
      *
      * This service is shared.
@@ -1837,6 +1871,19 @@ class appDevDebugProjectContainer extends Container
         $d->addLoader($c);
 
         return $this->services['routing.loader'] = new \Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader($this->get('controller_name_converter'), $d);
+    }
+
+    /**
+     * Gets the 'schedule.repository' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \SprinklerBundle\Repository\ScheduleRepository A SprinklerBundle\Repository\ScheduleRepository instance.
+     */
+    protected function getSchedule_RepositoryService()
+    {
+        return $this->services['schedule.repository'] = new \SprinklerBundle\Repository\ScheduleRepository($this->get('doctrine.orm.default_entity_manager'));
     }
 
     /**
@@ -1947,7 +1994,7 @@ class appDevDebugProjectContainer extends Container
 
         $e = new \Symfony\Component\Security\Http\AccessMap();
 
-        return $this->services['security.firewall.map.context.main'] = new \Symfony\Bundle\SecurityBundle\Security\FirewallContext(array(0 => new \Symfony\Component\Security\Http\Firewall\ChannelListener($e, new \Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint(80, 443), $a), 1 => new \Symfony\Component\Security\Http\Firewall\ContextListener($b, array(0 => new \Symfony\Component\Security\Core\User\InMemoryUserProvider()), 'main', $a, $this->get('debug.event_dispatcher', ContainerInterface::NULL_ON_INVALID_REFERENCE)), 2 => new \Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener($b, '56d99b6032e015.53190610', $a, $c), 3 => new \Symfony\Component\Security\Http\Firewall\AccessListener($b, $this->get('security.access.decision_manager'), $e, $c)), new \Symfony\Component\Security\Http\Firewall\ExceptionListener($b, $this->get('security.authentication.trust_resolver'), new \Symfony\Component\Security\Http\HttpUtils($d, $d), 'main', NULL, NULL, NULL, $a, false));
+        return $this->services['security.firewall.map.context.main'] = new \Symfony\Bundle\SecurityBundle\Security\FirewallContext(array(0 => new \Symfony\Component\Security\Http\Firewall\ChannelListener($e, new \Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint(80, 443), $a), 1 => new \Symfony\Component\Security\Http\Firewall\ContextListener($b, array(0 => new \Symfony\Component\Security\Core\User\InMemoryUserProvider()), 'main', $a, $this->get('debug.event_dispatcher', ContainerInterface::NULL_ON_INVALID_REFERENCE)), 2 => new \Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener($b, '571a8ec5a71dd6.83645853', $a, $c), 3 => new \Symfony\Component\Security\Http\Firewall\AccessListener($b, $this->get('security.access.decision_manager'), $e, $c)), new \Symfony\Component\Security\Http\Firewall\ExceptionListener($b, $this->get('security.authentication.trust_resolver'), new \Symfony\Component\Security\Http\HttpUtils($d, $d), 'main', NULL, NULL, NULL, $a, false));
     }
 
     /**
@@ -2454,6 +2501,19 @@ class appDevDebugProjectContainer extends Container
     }
 
     /**
+     * Gets the 'timer.repository' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \SprinklerBundle\Repository\TimerRepository A SprinklerBundle\Repository\TimerRepository instance.
+     */
+    protected function getTimer_RepositoryService()
+    {
+        return $this->services['timer.repository'] = new \SprinklerBundle\Repository\TimerRepository($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
      * Gets the 'translation.dumper.csv' service.
      *
      * This service is shared.
@@ -2879,7 +2939,7 @@ class appDevDebugProjectContainer extends Container
             $c->setRequestStack($b);
         }
 
-        $this->services['twig'] = $instance = new \Twig_Environment($this->get('twig.loader'), array('debug' => true, 'strict_variables' => true, 'exception_controller' => 'twig.controller.exception:showAction', 'form_themes' => array(0 => 'form_div_layout.html.twig'), 'autoescape' => 'filename', 'cache' => (__DIR__.'/twig'), 'charset' => 'UTF-8', 'paths' => array(), 'date' => array('format' => 'F j, Y H:i', 'interval_format' => '%d days', 'timezone' => NULL), 'number_format' => array('decimals' => 0, 'decimal_point' => '.', 'thousands_separator' => ',')));
+        $this->services['twig'] = $instance = new \Twig_Environment($this->get('twig.loader'), array('form_themes' => array(0 => 'form_div_layout.html.twig', 1 => 'bootstrap_3_layout.html.twig'), 'debug' => true, 'strict_variables' => true, 'exception_controller' => 'twig.controller.exception:showAction', 'autoescape' => 'filename', 'cache' => (__DIR__.'/twig'), 'charset' => 'UTF-8', 'paths' => array(), 'date' => array('format' => 'F j, Y H:i', 'interval_format' => '%d days', 'timezone' => NULL), 'number_format' => array('decimals' => 0, 'decimal_point' => '.', 'thousands_separator' => ',')));
 
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\LogoutUrlExtension($this->get('security.logout_url_generator')));
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\SecurityExtension($this->get('security.authorization_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE)));
@@ -2893,12 +2953,13 @@ class appDevDebugProjectContainer extends Container
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\ExpressionExtension());
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\HttpKernelExtension($this->get('fragment.handler')));
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\HttpFoundationExtension($b, $this->get('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE)));
-        $instance->addExtension(new \Symfony\Bridge\Twig\Extension\FormExtension(new \Symfony\Bridge\Twig\Form\TwigRenderer(new \Symfony\Bridge\Twig\Form\TwigRendererEngine(array(0 => 'form_div_layout.html.twig')), $this->get('security.csrf.token_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE))));
+        $instance->addExtension(new \Symfony\Bridge\Twig\Extension\FormExtension(new \Symfony\Bridge\Twig\Form\TwigRenderer(new \Symfony\Bridge\Twig\Form\TwigRendererEngine(array(0 => 'form_div_layout.html.twig', 1 => 'bootstrap_3_layout.html.twig')), $this->get('security.csrf.token_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE))));
         $instance->addExtension(new \Twig_Extension_Debug());
         $instance->addExtension(new \Doctrine\Bundle\DoctrineBundle\Twig\DoctrineExtension());
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\DumpExtension($this->get('var_dumper.cloner')));
         $instance->addExtension(new \Symfony\Bundle\WebProfilerBundle\Twig\WebProfilerExtension());
         $instance->addGlobal('app', $c);
+        $instance->addGlobal('weather', $this->get('weather.service'));
         call_user_func(array(new \Symfony\Bundle\TwigBundle\DependencyInjection\Configurator\EnvironmentConfigurator('F j, Y H:i', '%d days', NULL, 0, '.', ','), 'configure'), $instance);
 
         return $instance;
@@ -3102,6 +3163,32 @@ class appDevDebugProjectContainer extends Container
     }
 
     /**
+     * Gets the 'weather.repository' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \SprinklerBundle\Repository\WeatherRepository A SprinklerBundle\Repository\WeatherRepository instance.
+     */
+    protected function getWeather_RepositoryService()
+    {
+        return $this->services['weather.repository'] = new \SprinklerBundle\Repository\WeatherRepository($this->get('overcast'), $this->get('geocode'), '2059 E Lindrick, Gilbert, AZ 85298');
+    }
+
+    /**
+     * Gets the 'weather.service' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \SprinklerBundle\Service\WeatherService A SprinklerBundle\Service\WeatherService instance.
+     */
+    protected function getWeather_ServiceService()
+    {
+        return $this->services['weather.service'] = new \SprinklerBundle\Service\WeatherService($this->get('weather.repository'));
+    }
+
+    /**
      * Gets the 'web_profiler.controller.exception' service.
      *
      * This service is shared.
@@ -3151,6 +3238,19 @@ class appDevDebugProjectContainer extends Container
     protected function getWebProfiler_DebugToolbarService()
     {
         return $this->services['web_profiler.debug_toolbar'] = new \Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener($this->get('twig'), false, 2, 'bottom', $this->get('router', ContainerInterface::NULL_ON_INVALID_REFERENCE), '^/(app(_[\\w]+)?\\.php/)?_wdt');
+    }
+
+    /**
+     * Gets the 'zone.repository' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return \SprinklerBundle\Repository\ZoneRepository A SprinklerBundle\Repository\ZoneRepository instance.
+     */
+    protected function getZone_RepositoryService()
+    {
+        return $this->services['zone.repository'] = new \SprinklerBundle\Repository\ZoneRepository($this->get('doctrine.orm.default_entity_manager'));
     }
 
     /**
@@ -3241,7 +3341,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getSecurity_Authentication_ManagerService()
     {
-        $this->services['security.authentication.manager'] = $instance = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(0 => new \Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider('56d99b6032e015.53190610')), true);
+        $this->services['security.authentication.manager'] = $instance = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(0 => new \Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider('571a8ec5a71dd6.83645853')), true);
 
         $instance->setEventDispatcher($this->get('debug.event_dispatcher'));
 
@@ -3451,8 +3551,10 @@ class appDevDebugProjectContainer extends Container
             'mailer_user' => NULL,
             'mailer_password' => NULL,
             'secret' => '2feb136a758f1cb17a6c4c42553ff871d0462a50',
-            'forecast_api' => '52a922ed7f8951840188f2b09dd90dd4',
             'locale' => 'en',
+            'forecast_api' => '52a922ed7f8951840188f2b09dd90dd4',
+            'address' => '2059 E Lindrick, Gilbert, AZ 85298',
+            'timezone' => 'America/Phoenix',
             'fragment.renderer.hinclude.global_template' => NULL,
             'fragment.path' => '/_fragment',
             'kernel.secret' => '2feb136a758f1cb17a6c4c42553ff871d0462a50',
@@ -3513,6 +3615,7 @@ class appDevDebugProjectContainer extends Container
             'twig.exception_listener.controller' => 'twig.controller.exception:showAction',
             'twig.form.resources' => array(
                 0 => 'form_div_layout.html.twig',
+                1 => 'bootstrap_3_layout.html.twig',
             ),
             'monolog.logger.class' => 'Symfony\\Bridge\\Monolog\\Logger',
             'monolog.gelf.publisher.class' => 'Gelf\\MessagePublisher',
@@ -3521,6 +3624,7 @@ class appDevDebugProjectContainer extends Container
             'monolog.handler.console.class' => 'Symfony\\Bridge\\Monolog\\Handler\\ConsoleHandler',
             'monolog.handler.group.class' => 'Monolog\\Handler\\GroupHandler',
             'monolog.handler.buffer.class' => 'Monolog\\Handler\\BufferHandler',
+            'monolog.handler.deduplication.class' => 'Monolog\\Handler\\DeduplicationHandler',
             'monolog.handler.rotating_file.class' => 'Monolog\\Handler\\RotatingFileHandler',
             'monolog.handler.syslog.class' => 'Monolog\\Handler\\SyslogHandler',
             'monolog.handler.syslogudp.class' => 'Monolog\\Handler\\SyslogUdpHandler',
@@ -3555,6 +3659,7 @@ class appDevDebugProjectContainer extends Container
             'monolog.mongo.client.class' => 'MongoClient',
             'monolog.handler.elasticsearch.class' => 'Monolog\\Handler\\ElasticSearchHandler',
             'monolog.elastica.client.class' => 'Elastica\\Client',
+            'monolog.use_microseconds' => true,
             'monolog.swift_mailer.handlers' => array(
 
             ),

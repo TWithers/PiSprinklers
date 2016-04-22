@@ -1,0 +1,4 @@
+parameters:
+    forecast_api: api_key_here
+    address: Phoenix, AZ
+    timezone: America/Phoenix

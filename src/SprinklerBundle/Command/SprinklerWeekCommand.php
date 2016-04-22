@@ -33,7 +33,7 @@ class SprinklerWeekCommand extends ContainerAwareCommand
             $r=-1;
             foreach($timers as $timer){
                 $r++;
-                $dowMap = array('', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
+                $dowMap = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
                 $start = \DateTime::createFromFormat('H:i', $timer->getStart());
                 $end = \DateTime::createFromFormat('H:i', $timer->getEnd());
                 if($r>0 && $rows[$r-1][0]==$dowMap[$timer->getDay()]){

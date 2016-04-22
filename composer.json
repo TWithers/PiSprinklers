@@ -22,7 +22,8 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
         "ronanguilloux/php-gpio":"^1.0",
-        "vertigolabs/overcast": "dev-master"
+        "vertigolabs/overcast": "dev-master",
+        "kamranahmedse/php-geocode": "*"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

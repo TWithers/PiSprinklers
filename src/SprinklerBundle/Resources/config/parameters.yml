@@ -1,0 +1,10 @@
+parameters:
+    #obtain a free api key from https://developer.forecast.io/register
+    forecast_api: your_api_key_here
+
+    #your address as: City, State
+    # or use full address
+    address: home_address
+
+    #Current timezone.  See http://php.net/manual/en/timezones.america.php
+    timezone: America/Phoenix

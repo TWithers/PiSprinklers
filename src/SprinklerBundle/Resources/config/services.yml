@@ -5,5 +5,29 @@ services:
     overcast:
         class: VertigoLabs\Overcast\Overcast
         arguments: ["%forecast_api%"]
-parameters:
-    forecast_api: 52a922ed7f8951840188f2b09dd90dd4
+    geocode:
+        class: KamranAhmed\Geocode\Geocode
+    repository:
+        class: Sprinklerbundle\Repository\Repository
+        arguments: ['@doctrine.orm.entity_manager']
+    schedule.repository:
+        class: SprinklerBundle\Repository\ScheduleRepository
+        parent: repository
+    timer.repository:
+        class: SprinklerBundle\Repository\TimerRepository
+        parent: repository
+    weather.repository:
+        class: SprinklerBundle\Repository\WeatherRepository
+        arguments: ['@overcast','@geocode','%address%']
+    weather.service:
+        class: SprinklerBundle\Service\WeatherService
+        arguments: ['@weather.repository']
+    zone.repository:
+        class: SprinklerBundle\Repository\ZoneRepository
+        parent: repository
+
+twig:
+    globals:
+        weather: '@weather.service'
+    form_themes:
+        - bootstrap_3_layout.html.twig

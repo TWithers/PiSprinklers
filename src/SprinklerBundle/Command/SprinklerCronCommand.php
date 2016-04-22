@@ -2,6 +2,7 @@
 
 namespace SprinklerBundle\Command;
 
+use PhpGpio\Gpio;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,28 +23,32 @@ class SprinklerCronCommand extends ContainerAwareCommand
         $day = date('N');
         $time = date('H:i');
 
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $zoneRepository = $em->getRepository('SprinklerBundle:Zone');
-        $query = $zoneRepository->createQueryBuilder('z')
-            ->where('z.override = TRUE AND z.overrideendtime IS NOT NULL')
-            ->getQuery();
-        $zones = $query->getResult();
-        if(count($zones)>0){
-            foreach($zones as $zone){
-                $output->writeln('Stopping Override on Zone #'.$zone->getId().' ('.$zone->getName().')');
-                $zone->setOverrideendtime(null);
-                $zone->setOverride(false);
-                $em->flush();
-                //handle stop
-            }
-        }
+//        $em = $this->getContainer()->get('doctrine')->getManager();
+//        $zoneRepository = $em->getRepository('SprinklerBundle:Zone');
+//        $query = $zoneRepository->createQueryBuilder('z')
+//            ->where('z.override = TRUE AND z.overrideendtime IS NOT NULL')
+//            ->getQuery();
+//        $zones = $query->getResult();
+//        if(count($zones)>0){
+//            foreach($zones as $zone){
+//                $output->writeln('Stopping Override on Zone #'.$zone->getId().' ('.$zone->getName().')');
+//                $zone->setOverrideendtime(null);
+//                $zone->setOverride(false);
+//                $em->flush();
+//                //handle stop
+//            }
+//        }
 
-
+        $gpio = new Gpio();
         $stop = $this->getContainer()->get('doctrine')->getRepository('SprinklerBundle:Timer')->findBy(['day'=>$day,'end'=>$time]);
         foreach($stop as $timer){
             $zone = $timer->getZone();
             if($zone->getOverride()===false){
                 $output->writeln('Stopping Zone #'.$zone->getId().' ('.$zone->getName().')');
+                if($gpio->currentDirection($zone->getRelay())!=="out") {
+                    $gpio->setup($zone->getRelay(), "out");
+                }
+                $gpio->output($zone->getRelay(),1);
             }
             //handle stop
         }
@@ -52,8 +57,11 @@ class SprinklerCronCommand extends ContainerAwareCommand
             $zone = $timer->getZone();
             if($zone->getOverride()===false){
                 $output->writeln('Starting Zone #'.$zone->getId().' ('.$zone->getName().')');
+                if($gpio->currentDirection($zone->getRelay())!=="out") {
+                    $gpio->setup($zone->getRelay(), "out");
+                }
+                $gpio->output($zone->getRelay(),0);
             }
-            //handle start
         }
     }
 

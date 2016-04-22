@@ -1,0 +1,51 @@
+{% extends "SprinklerBundle:Default:template.html.twig" %}
+
+{% block masthead %}
+    <div class="row">
+        <div class="col-md-7">
+            <h1>Irrigation Zones
+            </h1>
+        </div>
+        <div class="col-md-5">
+            <div class="well well-lg">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>Zones are the individual valves.  Often, one valve is for sprinklers in one area, another for driplines, and another is for backyard irrigation.  Here we can see, edit, and add irrigation zones.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+
+                    {{ form_row(form.name) }}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_row(form.relay) }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form_row(form.image) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_widget(form.save,{'attr':{'class':'btn-primary pull-right btn-lg'}}) }}
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+

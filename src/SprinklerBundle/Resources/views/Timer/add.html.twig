@@ -1,0 +1,54 @@
+{% extends "SprinklerBundle:Default:template.html.twig" %}
+
+{% block masthead %}
+    <div class="row">
+        <div class="col-md-7">
+            <h1>Zone Timers
+            </h1>
+        </div>
+        <div class="col-md-5">
+            <div class="well well-lg">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p>Zone timers are the schedule for the different irrigation zones.  You can set up multiple timers for each zone for each day.  You can have it run as short as one minute or as long as you want.  You should only do one zone at a time as multiple zones may cause voltage or water pressure issues.</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <h2>Add a timer to the {{ zone.name }} zone</h2>
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{ form_row(form.start) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.duration) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_row(form.days) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_widget(form.save,{'attr':{'class':'btn-primary pull-right btn-lg'}}) }}
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+

@@ -3,12 +3,15 @@
 namespace SprinklerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Zone
  *
  * @ORM\Table(name="zone")
  * @ORM\Entity
+ * @UniqueEntity("relay")
  */
 class Zone
 {
@@ -24,7 +27,9 @@ class Zone
     /**
      * @var string
      *
-     * @ORM\Column(name="relay", type="string", length=60, nullable=false)
+     * @ORM\Column(name="relay", type="smallint", nullable=false, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Type(type="numeric",message="This value should be a number.")
      */
     private $relay;
 
@@ -32,29 +37,20 @@ class Zone
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=60, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Length(max=60)
      */
     private $name;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="image", type="boolean", nullable=false)
+     * @ORM\Column(name="image", type="smallint", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Choice(choices={1,2})
      */
     private $image;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="override", type="boolean", nullable=false)
-     */
-    private $override = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="overrideEndTime", type="string", length=5, nullable=true)
-     */
-    private $overrideendtime;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -71,7 +67,6 @@ class Zone
         $this->timers = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-
     /**
      * Get id
      *
@@ -85,7 +80,7 @@ class Zone
     /**
      * Set relay
      *
-     * @param string $relay
+     * @param smallint $relay
      *
      * @return Zone
      */
@@ -99,7 +94,7 @@ class Zone
     /**
      * Get relay
      *
-     * @return string
+     * @return smallint
      */
     public function getRelay()
     {
@@ -152,54 +147,6 @@ class Zone
     public function getImage()
     {
         return $this->image;
-    }
-
-    /**
-     * Set override
-     *
-     * @param boolean $override
-     *
-     * @return Zone
-     */
-    public function setOverride($override)
-    {
-        $this->override = $override;
-
-        return $this;
-    }
-
-    /**
-     * Get override
-     *
-     * @return boolean
-     */
-    public function getOverride()
-    {
-        return $this->override;
-    }
-
-    /**
-     * Set overrideendtime
-     *
-     * @param string $overrideendtime
-     *
-     * @return Zone
-     */
-    public function setOverrideendtime($overrideendtime)
-    {
-        $this->overrideendtime = $overrideendtime;
-
-        return $this;
-    }
-
-    /**
-     * Get overrideendtime
-     *
-     * @return string
-     */
-    public function getOverrideendtime()
-    {
-        return $this->overrideendtime;
     }
 
     /**

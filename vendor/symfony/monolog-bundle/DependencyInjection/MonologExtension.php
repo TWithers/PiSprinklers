@@ -48,10 +48,13 @@ class MonologExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
+
         if (isset($config['handlers'])) {
             $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
             $loader->load('monolog.xml');
             $container->setAlias('logger', 'monolog.logger');
+
+            $container->setParameter('monolog.use_microseconds', $config['use_microseconds']);
 
             // always autowire the main logger, require Symfony >= 2.8
             if (method_exists('Symfony\Component\DependencyInjection\Definition', 'addAutowiringType')) {
@@ -312,7 +315,7 @@ class MonologExtension extends Extension
                 $handler['passthru_level'] = $this->levelToMonologConst($handler['passthru_level']);
             }
             $nestedHandlerId = $this->getHandlerId($handler['handler']);
-            $this->nestedHandlers[] = $nestedHandlerId;
+            $this->markNestedHandler($nestedHandlerId);
 
             if (isset($handler['activation_strategy'])) {
                 $activation = new Reference($handler['activation_strategy']);
@@ -343,7 +346,7 @@ class MonologExtension extends Extension
             }
 
             $nestedHandlerId = $this->getHandlerId($handler['handler']);
-            $this->nestedHandlers[] = $nestedHandlerId;
+            $this->markNestedHandler($nestedHandlerId);
             $minLevelOrList = !empty($handler['accepted_levels']) ? $handler['accepted_levels'] : $handler['min_level'];
 
             $definition->setArguments(array(
@@ -356,7 +359,7 @@ class MonologExtension extends Extension
 
         case 'buffer':
             $nestedHandlerId = $this->getHandlerId($handler['handler']);
-            $this->nestedHandlers[] = $nestedHandlerId;
+            $this->markNestedHandler($nestedHandlerId);
 
             $definition->setArguments(array(
                 new Reference($nestedHandlerId),
@@ -367,12 +370,26 @@ class MonologExtension extends Extension
             ));
             break;
 
+        case 'deduplication':
+            $nestedHandlerId = $this->getHandlerId($handler['handler']);
+            $this->markNestedHandler($nestedHandlerId);
+            $defaultStore = '%kernel.cache_dir%/monolog_dedup_'.sha1($handlerId);
+
+            $definition->setArguments(array(
+                new Reference($nestedHandlerId),
+                isset($handler['store']) ? $handler['store'] : $defaultStore,
+                $handler['deduplication_level'],
+                $handler['time'],
+                $handler['bubble'],
+            ));
+            break;
+
         case 'group':
         case 'whatfailuregroup':
             $references = array();
             foreach ($handler['members'] as $nestedHandler) {
                 $nestedHandlerId = $this->getHandlerId($nestedHandler);
-                $this->nestedHandlers[] = $nestedHandlerId;
+                $this->markNestedHandler($nestedHandlerId);
                 $references[] = new Reference($nestedHandlerId);
             }
 
@@ -546,6 +563,7 @@ class MonologExtension extends Extension
             } else {
                 $client = new Definition('Raven_Client', array(
                     $handler['dsn'],
+                    array('auto_log_stacks' => $handler['auto_log_stacks'])
                 ));
                 $client->setPublic(false);
                 $clientId = 'monolog.raven.client.'.sha1($handler['dsn']);
@@ -556,6 +574,9 @@ class MonologExtension extends Extension
                 $handler['level'],
                 $handler['bubble'],
             ));
+            if (!empty($handler['release'])) {
+                $definition->addMethodCall('setRelease', array($handler['release']));
+            }
             break;
 
         case 'loggly':
@@ -624,10 +645,16 @@ class MonologExtension extends Extension
                 $handler['bubble'],
             ));
             break;
+        case 'newrelic':
+            $definition->setArguments(array(
+                $handler['level'],
+                $handler['bubble'],
+                $handler['app_name'],
+            ));
+            break;
 
         // Handlers using the constructor of AbstractHandler without adding their own arguments
         case 'browser_console':
-        case 'newrelic':
         case 'test':
         case 'null':
         case 'debug':
@@ -641,12 +668,25 @@ class MonologExtension extends Extension
             throw new \InvalidArgumentException(sprintf('Invalid handler type "%s" given for handler "%s"', $handler['type'], $name));
         }
 
+        if (!empty($handler['nested']) && true === $handler['nested']) {
+            $this->markNestedHandler($handlerId);
+        }
+
         if (!empty($handler['formatter'])) {
             $definition->addMethodCall('setFormatter', array(new Reference($handler['formatter'])));
         }
         $container->setDefinition($handlerId, $definition);
 
         return $handlerId;
+    }
+
+    private function markNestedHandler($nestedHandlerId)
+    {
+        if (in_array($nestedHandlerId, $this->nestedHandlers)) {
+            return;
+        }
+
+        $this->nestedHandlers[] = $nestedHandlerId;
     }
 
     private function getHandlerId($name)

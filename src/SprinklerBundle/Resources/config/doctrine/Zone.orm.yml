@@ -12,11 +12,12 @@ SprinklerBundle\Entity\Zone:
                 strategy: IDENTITY
     fields:
         relay:
-            type: string
+            type: smallint
             nullable: false
             length: 60
             options:
                 fixed: false
+            unique: true
         name:
             type: string
             nullable: false
@@ -24,20 +25,8 @@ SprinklerBundle\Entity\Zone:
             options:
                 fixed: false
         image:
-            type: boolean
+            type: smallint
             nullable: false
-        override:
-            type: boolean
-            nullable: false
-            options:
-                default: '0'
-        overrideendtime:
-            type: string
-            nullable: false
-            length: 5
-            options:
-                fixed: false
-            column: overrideEndTime
     oneToMany:
         timers:
             targetEntity: Timer
