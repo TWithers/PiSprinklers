@@ -1,10 +1,4 @@
 parameters:
-    #obtain a free api key from https://developer.forecast.io/register
-    forecast_api: your_api_key_here
-
-    #your address as: City, State
-    # or use full address
-    address: home_address
-
-    #Current timezone.  See http://php.net/manual/en/timezones.america.php
+    forecast_api: 52a922ed7f8951840188f2b09dd90dd4
+    address: 2059 E Lindrick, Gilbert, AZ 85298
     timezone: America/Phoenix

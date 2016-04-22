@@ -7,8 +7,8 @@ We are going to start first by updating our Pi by running `sudo apt-get update`.
 After it is finished updating, we can start the installation of the system.  We need to install Apache, PHP, MySQL, Git, Nano, and Composer.  
 
 Install Apache: `sudo apt-get install apache2 -y`
-Install PHP: `sudo apt-get install php5 libapache2-mod-php5 -y`
-Install MySQL: `sudo apt-get install mysql-server php5-mysql -y`
+Install PHP: `sudo apt-get install php5 libapache2-mod-php5 php5-curl php5-mysql -y`
+Install MySQL: `sudo apt-get install mysql-server -y`
 Install Git: `sudo apt-get install git -y`
 Install Nano: `sudo apt-get install nano -y`
 

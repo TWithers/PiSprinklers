@@ -31,3 +31,5 @@ twig:
         weather: '@weather.service'
     form_themes:
         - bootstrap_3_layout.html.twig
+imports:
+    - { resource: "@SprinklerBundle/Resources/config/parameters.yml" }
