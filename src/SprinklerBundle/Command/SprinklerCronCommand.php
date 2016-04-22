@@ -43,25 +43,23 @@ class SprinklerCronCommand extends ContainerAwareCommand
         $stop = $this->getContainer()->get('doctrine')->getRepository('SprinklerBundle:Timer')->findBy(['day'=>$day,'end'=>$time]);
         foreach($stop as $timer){
             $zone = $timer->getZone();
-            if($zone->getOverride()===false){
-                $output->writeln('Stopping Zone #'.$zone->getId().' ('.$zone->getName().')');
-                if($gpio->currentDirection($zone->getRelay())!=="out") {
-                    $gpio->setup($zone->getRelay(), "out");
-                }
-                $gpio->output($zone->getRelay(),1);
+
+            $output->writeln('Stopping Zone #'.$zone->getId().' ('.$zone->getName().')');
+            if($gpio->currentDirection($zone->getRelay())!=="out") {
+                $gpio->setup($zone->getRelay(), "out");
             }
-            //handle stop
+            $gpio->output($zone->getRelay(),1);
+
         }
         $start = $this->getContainer()->get('doctrine')->getRepository('SprinklerBundle:Timer')->findBy(['day'=>$day,'start'=>$time]);
         foreach($start as $timer){
             $zone = $timer->getZone();
-            if($zone->getOverride()===false){
-                $output->writeln('Starting Zone #'.$zone->getId().' ('.$zone->getName().')');
-                if($gpio->currentDirection($zone->getRelay())!=="out") {
-                    $gpio->setup($zone->getRelay(), "out");
-                }
-                $gpio->output($zone->getRelay(),0);
+            
+            $output->writeln('Starting Zone #'.$zone->getId().' ('.$zone->getName().')');
+            if($gpio->currentDirection($zone->getRelay())!=="out") {
+                $gpio->setup($zone->getRelay(), "out");
             }
+            $gpio->output($zone->getRelay(),0);
         }
     }
 
