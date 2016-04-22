@@ -50,5 +50,5 @@
 
 # Created by .ignore support plugin (hsz.mobi)
 
-/src/SprinklerBundle/Resources/config/parameters_dev.yml
+/src/SprinklerBundle/Resources/config/parameters.yml
 /.idea/
