@@ -56,7 +56,7 @@ class ScheduleRepository extends Repository{
 
     public function getNextUp(){
         $timers = $this->em->getRepository('SprinklerBundle:Timer')->findAll(['zone'=>'ASC','day' => 'ASC', 'start' => 'ASC']);
-        if($timers===null){
+        if(!isset($timers[0])){
             return[
                 "name"=>"No timers exist yet!",
                 "start"=>"12:00A",
