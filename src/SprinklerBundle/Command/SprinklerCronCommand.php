@@ -21,45 +21,40 @@ class SprinklerCronCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         date_default_timezone_set($this->getContainer()->getParameter('timezone'));
+
         $day = date('N');
         $time = date('H:i');
-
-//        $em = $this->getContainer()->get('doctrine')->getManager();
-//        $zoneRepository = $em->getRepository('SprinklerBundle:Zone');
-//        $query = $zoneRepository->createQueryBuilder('z')
-//            ->where('z.override = TRUE AND z.overrideendtime IS NOT NULL')
-//            ->getQuery();
-//        $zones = $query->getResult();
-//        if(count($zones)>0){
-//            foreach($zones as $zone){
-//                $output->writeln('Stopping Override on Zone #'.$zone->getId().' ('.$zone->getName().')');
-//                $zone->setOverrideendtime(null);
-//                $zone->setOverride(false);
-//                $em->flush();
-//                //handle stop
-//            }
-//        }
-
         $gpio = new Gpio();
+
         $stop = $this->getContainer()->get('doctrine')->getRepository('SprinklerBundle:Timer')->findBy(['day'=>$day,'end'=>$time]);
         foreach($stop as $timer){
             $zone = $timer->getZone();
-
             $output->writeln('Stopping Zone #'.$zone->getId().' ('.$zone->getName().')');
-            if($gpio->currentDirection($zone->getRelay())!=="out") {
-                $gpio->setup($zone->getRelay(), "out");
+
+            if(!$gpio->isValidPin($zone->getRelay())){
+                $output->writeln('GPIO pin '.$zone->getRelay().'is not valid');
+                continue;
             }
-            $gpio->output($zone->getRelay(),1);
+            if(!$gpio->isExported($zone->getRelay) || $gpio->currentDirection($zone->getRelay())!==Gpio::DIRECTION_OUT){
+                $gpio->setup($zone->getRelay(),Gpio::DIRECTION_OUT);
+            }
+            $gpio->output($zone->getRelay(),Gpio::IO_VALUE_ON); //This is to ensure that 0 turns it on and 1 turns off to avoid issues when the system reboots.
 
         }
+
         $start = $this->getContainer()->get('doctrine')->getRepository('SprinklerBundle:Timer')->findBy(['day'=>$day,'start'=>$time]);
         foreach($start as $timer){
             $zone = $timer->getZone();
             $output->writeln('Starting Zone #'.$zone->getId().' ('.$zone->getName().')');
-            if($gpio->currentDirection($zone->getRelay())!=="out") {
-                $gpio->setup($zone->getRelay(), "out");
+            
+            if(!$gpio->isValidPin($zone->getRelay())){
+                $output->writeln('GPIO pin '.$zone->getRelay().'is not valid');
+                continue;
             }
-            $gpio->output($zone->getRelay(),0);
+            if(!$gpio->isExported($zone->getRelay) || $gpio->currentDirection($zone->getRelay())!==Gpio::DIRECTION_OUT){
+                $gpio->setup($zone->getRelay(),Gpio::DIRECTION_OUT);
+            }
+            $gpio->output($zone->getRelay(),Gpio::IO_VALUE_ON); //This is to ensure that 0 turns it on and 1 turns off to avoid issues when the system reboots.
         }
     }
 
