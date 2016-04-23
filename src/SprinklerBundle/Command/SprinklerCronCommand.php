@@ -35,7 +35,7 @@ class SprinklerCronCommand extends ContainerAwareCommand
                 $output->writeln('GPIO pin '.$zone->getRelay().'is not valid');
                 continue;
             }
-            if(!$gpio->isExported($zone->getRelay) || $gpio->currentDirection($zone->getRelay())!==Gpio::DIRECTION_OUT){
+            if(!$gpio->isExported($zone->getRelay()) || $gpio->currentDirection($zone->getRelay())!==Gpio::DIRECTION_OUT){
                 $gpio->setup($zone->getRelay(),Gpio::DIRECTION_OUT);
             }
             $gpio->output($zone->getRelay(),Gpio::IO_VALUE_ON); //This is to ensure that 0 turns it on and 1 turns off to avoid issues when the system reboots.
@@ -51,7 +51,7 @@ class SprinklerCronCommand extends ContainerAwareCommand
                 $output->writeln('GPIO pin '.$zone->getRelay().'is not valid');
                 continue;
             }
-            if(!$gpio->isExported($zone->getRelay) || $gpio->currentDirection($zone->getRelay())!==Gpio::DIRECTION_OUT){
+            if(!$gpio->isExported($zone->getRelay()) || $gpio->currentDirection($zone->getRelay())!==Gpio::DIRECTION_OUT){
                 $gpio->setup($zone->getRelay(),Gpio::DIRECTION_OUT);
             }
             $gpio->output($zone->getRelay(),Gpio::IO_VALUE_ON); //This is to ensure that 0 turns it on and 1 turns off to avoid issues when the system reboots.
