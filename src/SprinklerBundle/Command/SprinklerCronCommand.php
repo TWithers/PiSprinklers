@@ -54,7 +54,7 @@ class SprinklerCronCommand extends ContainerAwareCommand
             if(!$gpio->isExported($zone->getRelay()) || $gpio->currentDirection($zone->getRelay())!==Gpio::DIRECTION_OUT){
                 $gpio->setup($zone->getRelay(),Gpio::DIRECTION_OUT);
             }
-            $gpio->output($zone->getRelay(),Gpio::IO_VALUE_ON); //This is to ensure that 0 turns it on and 1 turns off to avoid issues when the system reboots.
+            $gpio->output($zone->getRelay(),Gpio::IO_VALUE_OFF); //This is to ensure that 0 turns it on and 1 turns off to avoid issues when the system reboots.
         }
     }
 
