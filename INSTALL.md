@@ -26,7 +26,23 @@ At this point, test the system by visiting http://your.pi.ip.here/ and you shoul
 
 We next need to clone the application repository in the correct directory.  So move into the /var/www directory (`cd /var/www`) and delete the contents of the directory (`rm -rf .`) With an empty directory, we can now clone the repo to the existing directory: `git clone https://github.com/TimWithers/PiSprinklers.git .`
 
-After the repository has been cloned, you will need to run `composer install` to install all the packages the program needs to work properly.  This can take a few minutes as well to download everything.
+After the repository has been cloned, you will need to run `composer install` to install all the packages the program needs to work properly.  This can take a few minutes as well to download everything.  After it downloads everything, you are going to be prompted with a few questions, and for the most part, you can just hit enter.  Make sure you update the database_name to `sprinklers`.
+
+    database_host: 127.0.0.1 #default#
+    database_port: null #default#
+    database_name: sprinkler #IMPORTANT#
+    database_user: root #default
+    database_password: null #default#
+    mailer_transport: smtp #default#
+    mailer_host: 127.0.0.1 #default#
+    mailer_user: null #default#
+    mailer_password: null #default#
+    secret: #default#
+    forecast_api: #your api key from forecast.io (skip if you want)#
+    address: #your home address or city/state for weather (skip if you want)#
+    timezone: #your timezone to make sure the pi works correctly#
+
+If you skipped any of this, or there was a typo, or you have not yet got a forecast.io key, you can modify these files at `/var/www/app/config/parameters.yml` and `/var/www/src/SprinklerBundle/Resources/config/parameters.yml`.  Be careful when modifying these files as spacing is very important and can cause the program not to run if you save it.  If you don't trust yourself, delete the two files and rerun `composer install` and it will recreate those files and prompt you for your answers.
 
 The final step to configuring the application is to update application permissions.  `chmod 777 -R /var/www/var/*` This gives the program access to cache, logs, and session data and the ability to create new files in those directories as needed.  Cache will help speed up the application and ensure the program is running correctly.
 
@@ -92,13 +108,15 @@ Then hit `Ctrl+X` to exit, and say `Y` to save the file.  Then reload and restar
 
 At this point, if you try to visit the page, you are going to get an error page because we haven't finished setting up everything we need to get the database up and running.  If you are still in the /var/www directory, run ` php bin/console doctrine:database:create` and it will create the "sprinkler" database.  Then run `php bin/console doctrine:schema:update --force` to add the tables to the database.
 
-###Weather API Key
-
-At this point, everything should be more or less working.  You will have an issue with the weather at this point as the system requires an API key for it to work.  You can visit https://developer.forecast.io/ and register as a developer.  After you register, you will get an API key.  Add this key to the services.yml file (`nano /var/www/src/SprinklerBundle/Resources/parameters.yml`) where it says "YOUR KEY HERE" and then update the address to your home address.  The program will use your address, find your longitude and latitude, and then find the weather for your location from forecast.io
 
 ###Clearing the cache one last time
 
 Finally, you will most likely need to clear Symfony's cache, so from /var/www, run the command `php bin\console cache:clear --env=prod` and it will clear the production cache so that the system will use the latest changes.
 
-###Creating the cron job
+###Creating the Crontab Entry
+
+A Crontab is a scheduled task.  We need to set the pi to check every minute whether it should start or stop a sprinkler.  To do this, type `crontab -e`. You will prompted with a list of editors to use to edit the crontab.  Choose Nano, which may be the default selection.  Inside you will see a bunch of text explaining how to write a task/job.  What we need to do is go to the very last line and paste the following: `* * * * * php /var/www/bin/console sprinkler:cron`.  Then just Save and Exit (Ctrl+X and then Y).  That is it, the system will automatically start checking every minute to see what needs to happen.
+
+###Double Check
+Visit your Pi's website (http://ipaddress/) and make sure everything is up and running.  You should be able to navigate to the different areas very easily. If you have a forecast.io api key, you should see the weather appearing in the menu.  You should be able to add zones and timers easily and the system will run automatically at this point.
 
