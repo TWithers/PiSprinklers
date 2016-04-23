@@ -5,3 +5,4 @@ git reset origin/master --hard
 composer install
 php bin/console cache:clear --env=prod
 chmod 777 -R var/*
+chmod 777 update.sh
