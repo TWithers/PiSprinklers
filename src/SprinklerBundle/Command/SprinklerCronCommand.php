@@ -20,6 +20,7 @@ class SprinklerCronCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        date_default_timezone_set($this->getContainer()->getParameter('timezone'));
         $day = date('N');
         $time = date('H:i');
 
@@ -54,7 +55,6 @@ class SprinklerCronCommand extends ContainerAwareCommand
         $start = $this->getContainer()->get('doctrine')->getRepository('SprinklerBundle:Timer')->findBy(['day'=>$day,'start'=>$time]);
         foreach($start as $timer){
             $zone = $timer->getZone();
-            
             $output->writeln('Starting Zone #'.$zone->getId().' ('.$zone->getName().')');
             if($gpio->currentDirection($zone->getRelay())!=="out") {
                 $gpio->setup($zone->getRelay(), "out");

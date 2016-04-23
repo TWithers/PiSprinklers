@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d3193a74fa7b58b06af80b788b13db83",
-    "content-hash": "4eea55a3a1a8343b2aec560087121a13",
+    "hash": "1da91076e71fd5b1a83ccc8f89e5f178",
+    "content-hash": "a9b5e912b3458e9f761393a4c1ce2ccf",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1096,22 +1096,27 @@
         },
         {
             "name": "ronanguilloux/php-gpio",
-            "version": "v1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ronanguilloux/php-gpio.git",
-                "reference": "2f2bcbfbe8bb27883d814375500a9755dae70d36"
+                "reference": "b001a47fc82003dc92a96ed7900f65b0eefe8eac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ronanguilloux/php-gpio/zipball/2f2bcbfbe8bb27883d814375500a9755dae70d36",
-                "reference": "2f2bcbfbe8bb27883d814375500a9755dae70d36",
+                "url": "https://api.github.com/repos/ronanguilloux/php-gpio/zipball/b001a47fc82003dc92a96ed7900f65b0eefe8eac",
+                "reference": "b001a47fc82003dc92a96ed7900f65b0eefe8eac",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "PhpGpio": "src/"
@@ -1124,9 +1129,7 @@
             "authors": [
                 {
                     "name": "Ronan Guilloux",
-                    "email": "ronan.guilloux@gmail.com",
-                    "homepage": "http://github.com/ronanguilloux",
-                    "role": "Developer"
+                    "email": "ronan.guilloux@gmail.com"
                 }
             ],
             "description": "GPIO-related utils & toolkit PHP library",
@@ -1144,7 +1147,7 @@
                 "raspberry pi",
                 "sensors"
             ],
-            "time": "2013-06-24 16:53:23"
+            "time": "2014-12-08 01:15:34"
         },
         {
             "name": "sensio/distribution-bundle",
@@ -2094,6 +2097,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "ronanguilloux/php-gpio": 20,
         "vertigolabs/overcast": 20
     },
     "prefer-stable": false,
