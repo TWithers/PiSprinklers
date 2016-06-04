@@ -80,6 +80,25 @@ class ZoneController extends Controller
     }
 
     /**
+     * @Route("/{relay}/activate", name="zone.activate")
+     */
+    public function activateAction($relay, Request $request){
+        $zoneRepo = $this->get('zone.repository');
+        if($zoneRepo->isValidRelay($relay)){
+            $zoneRepo->toggleActivate($relay);
+            return $this->redirectToRoute('zone.index');
+        }else{
+            return $this->render("SprinklerBundle:Default:error.html.twig",["error"=>
+                [
+                    "title"=>"Error Deleting Zone",
+                    "message"=>"There was an error deleting the zone.  The zone you are trying to delete does not exist, and may have been deleted already.",
+                    "code"=>"zone.delete.$relay",
+                ]
+            ]);
+        }
+    }
+
+    /**
      * @Route("/{relay}/edit", name="zone.edit")
      */
     public function editAction($relay, Request $request){

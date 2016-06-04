@@ -23,7 +23,8 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "ronanguilloux/php-gpio":"dev-master",
         "vertigolabs/overcast": "dev-master",
-        "kamranahmedse/php-geocode": "*"
+        "kamranahmedse/php-geocode": "*",
+        "doctrine/doctrine-migrations-bundle": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

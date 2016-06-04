@@ -42,4 +42,17 @@ class ZoneRepository extends Repository
         $this->em->flush();
         return true;
     }
+    public function toggleActivate($relay){
+        if($this->lastZone===null || $this->lastZone->getRelay()!=$relay){
+            $zone = $this->loadZoneByRelay($relay);
+            if($zone===null){
+                return false;
+            }
+        }else{
+            $zone = $this->lastZone;
+        }
+        $zone->setActive(!$zone->getActive());
+        $this->em->flush();
+        return true;
+    }
 }

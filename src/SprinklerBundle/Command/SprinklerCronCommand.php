@@ -45,6 +45,9 @@ class SprinklerCronCommand extends ContainerAwareCommand
         $start = $this->getContainer()->get('doctrine')->getRepository('SprinklerBundle:Timer')->findBy(['day'=>$day,'start'=>$time]);
         foreach($start as $timer){
             $zone = $timer->getZone();
+            if($zone->getActive()==false){
+                continue;
+            }
             $output->writeln('Starting Zone #'.$zone->getId().' ('.$zone->getName().')');
             
             if(!$gpio->isValidPin($zone->getRelay())){

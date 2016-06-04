@@ -43,7 +43,7 @@ class Zone
     private $name;
 
     /**
-     * @var boolean
+     * @var int
      *
      * @ORM\Column(name="image", type="smallint", nullable=false)
      * @Assert\NotBlank
@@ -58,6 +58,15 @@ class Zone
      * @ORM\OneToMany(targetEntity="SprinklerBundle\Entity\Timer", mappedBy="zone")
      */
     private $timers;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Type(type="bool")
+     */
+    private $active=true;
 
     /**
      * Constructor
@@ -181,5 +190,13 @@ class Zone
     public function getTimers()
     {
         return $this->timers;
+    }
+
+    public function setActive($active){
+        $this->active=$active;
+    }
+
+    public function getActive(){
+        return $this->active;
     }
 }
