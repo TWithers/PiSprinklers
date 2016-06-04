@@ -19,7 +19,7 @@ class Version20160604193155 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE zone ADD active TINYINT(1) NOT NULL DEFAULT "1", CHANGE relay relay SMALLINT NOT NULL, CHANGE image image SMALLINT NOT NULL');
-        $this->addSql('ALTER TABLE zone RENAME INDEX relay TO UNIQ_A0EBC0075D3AE2B9');
+//        $this->addSql('ALTER TABLE zone RENAME INDEX relay TO UNIQ_A0EBC0075D3AE2B9');
     }
 
     /**
@@ -31,6 +31,6 @@ class Version20160604193155 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE zone DROP active, CHANGE relay relay TINYINT(1) NOT NULL, CHANGE image image TINYINT(1) NOT NULL');
-        $this->addSql('ALTER TABLE zone RENAME INDEX uniq_a0ebc0075d3ae2b9 TO relay');
+//        $this->addSql('ALTER TABLE zone RENAME INDEX uniq_a0ebc0075d3ae2b9 TO relay');
     }
 }
