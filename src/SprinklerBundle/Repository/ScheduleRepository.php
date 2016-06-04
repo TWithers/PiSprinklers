@@ -6,7 +6,7 @@ use SprinklerBundle\Entity\Timer;
 
 class ScheduleRepository extends Repository{
     public function getWeekSchedule(){
-        $timers = $this->em->getRepository('SprinklerBundle:Timer')->findAll(['zone'=>'ASC','day' => 'ASC', 'start' => 'ASC']);
+        $timers = $this->em->getRepository('SprinklerBundle:Timer')->findBy([],['day' => 'ASC', 'start' => 'ASC','zone'=>'ASC',]);
         $schedule=[
             [
                 'name'=>'Monday',
@@ -55,7 +55,8 @@ class ScheduleRepository extends Repository{
     }
 
     public function getNextUp(){
-        $timers = $this->em->getRepository('SprinklerBundle:Timer')->findAll(['zone'=>'ASC','day' => 'ASC', 'start' => 'ASC']);
+        $timers = $this->em->getRepository('SprinklerBundle:Timer')->findBy([],['day' => 'ASC', 'start' => 'ASC','zone'=>'ASC',]);
+        dump($timers);
         if(!isset($timers[0])){
             return[
                 "name"=>"No timers exist yet!",
@@ -67,14 +68,19 @@ class ScheduleRepository extends Repository{
         $now=null;
         $next=null;
         foreach($timers as $timer){
-            if($timer->getDay()>=date('w')){
-                if(strtotime("now")>=date("h:i",strtotime($timer->getStart())) && strtotime("now")<=date("h:i",strtotime($timer->getEnd()))) {
+            if($timer->getDay()==date('N')){
+                if(strtotime("now")>=strtotime("today ".$timer->getStart()) && strtotime("now")<=strtotime("today ".$timer->getEnd())) {
                     $now = $timer;
                     break;
-                }else if (strtotime("now")<date("h:i",strtotime($timer->getStart()))){
+                }
+                if (strtotime("now")<strtotime("today ".$timer->getStart())){
                     $next = $timer;
                     break;
                 }
+            }
+            if($timer->getDay()>date('N')){
+                $next=$timer;
+                break;
             }
         }
         if($now===null && $next===null){
@@ -87,6 +93,12 @@ class ScheduleRepository extends Repository{
         }else{
             $title = $next->getZone()->getName(). ' - Up Next';
         }
+        if($next->getDay()==date('N')){
+            $title.=' (Today)';
+        }else{
+            $dayOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+            $title.=' ('.$dayOfWeek[$next->getDay()].')';
+        }
         $timer = [
             'name'=> $title,
             'start'=>date("h:ia",strtotime($next->getStart())),
@@ -98,7 +110,7 @@ class ScheduleRepository extends Repository{
     }
 
     public function getTimersByZone(){
-        $timers = $this->em->getRepository('SprinklerBundle:Timer')->findAll(['zone'=>'ASC','day' => 'ASC', 'start' => 'ASC']);
+        $timers = $this->em->getRepository('SprinklerBundle:Timer')->findBy([],['day' => 'ASC', 'start' => 'ASC','zone'=>'ASC',]);
         $ret=[];
         foreach($timers as $timer){
             if(!isset($ret[$timer->getZone()->getId()])){
